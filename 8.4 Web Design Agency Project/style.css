@@ -25,14 +25,8 @@ footer {
 
 .tile-image{
   height: 200px;
-  width: 200px;
-}
-.main .right-card .tile-image{
   float: left;
-}
-
-.main .left-card .tile-image{
-  float: left;
+  margin-right: 50px;
 }
 
 .right-card{
@@ -44,24 +38,18 @@ footer {
   float: left;
 }
  @media(max-width: 680px){
-  
-.main .right-card .tile-image{
-  float: left;
-}
-
-.main .left-card .tile-image{
-  float: left;
-}
-
+ 
 .right-card{
   display: block;
   width: 50%;
   float: right;
+  text-align: justify;
 }
 .left-card{
    display: block;
   width: 50%;
   float: left;
+  text-align: justify;
 }
 }
 
