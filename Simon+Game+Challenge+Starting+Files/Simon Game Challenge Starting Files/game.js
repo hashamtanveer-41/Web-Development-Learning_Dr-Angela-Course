@@ -1,39 +1,46 @@
-var gamePattern =[]
+
 var buttonColours = ["red", "blue", "green", "yellow"];
+
+var gamePattern =[]
 var userClickedPattern = []
+
 var count =0;
-var randomChoosenColor;
 var toggle = true;
-function nextSequence(){
-     $("h1").html(`Level ${count}`)
-      num = Math.floor((Math.random()*4));
-        randomChoosenColor = buttonColours[num]
-        gamePattern.push(randomChoosenColor)
-         console.log(randomChoosenColor);
-        
-}
 
 $(document).keydown(()=> {
-    $("h1").html(`Level ${count}`)
     if(toggle){
+        $("#level-title").text(`Level ${count}`)
         nextSequence();
         toggle = false; 
     }
 })
 
+function nextSequence(){
+    userClickedPattern =[]
+    count++;
+     $("#level-title").text(`Level ${count}`)
+      num = Math.floor((Math.random()*4));
+       var randomChoosenColor = buttonColours[num]
+        gamePattern.push(randomChoosenColor)
+         console.log(randomChoosenColor);
+        
+         $(`#${randomChoosenColor}`).fadeOut(100).fadeIn(100);
+         playSound(randomChoosenColor)
+}
+
 
 $(".btn").click(function handleClick(event){
-    var userChosenColor = event.target.id;
+    var userChosenColor = $(this).attr("id");    
     animatePress(userChosenColor)
+    playSound(userChosenColor)
     userClickedPattern.push(userChosenColor)
     console.log(userClickedPattern);
     checkAnswer(userClickedPattern.length-1)
     
 })
 
-function correctClick(){    
-        $(this).fadeOut(100).fadeIn(100);
-        new Audio(`sounds/${randomChoosenColor}.mp3`).play();
+function playSound(name){    
+        new Audio(`sounds/${name}.mp3`).play();
         
 }
 
@@ -46,21 +53,22 @@ function animatePress(currentColor){
 
 
 function checkAnswer(currentLevel){
-    if(currentLevel<=3 && userClickedPattern[currentLevel] === gamePattern[count++]){
+    if( userClickedPattern[currentLevel] === gamePattern[currentLevel]){
+        if(userClickedPattern.length === gamePattern.length){
+            setTimeout(function(){
+                nextSequence()
+            }, 1000)
+        }
         console.log("success");
-        correctClick();
-        setTimeout(nextSequence(), 1000)
-        userClickedPattern = []
-    }else if(currentLevel>3){
-        console.log("game over");
-        startOver();
     }
     else{
         $("body").addClass("game-over")
-         new Audio(`sounds/wrong.mp3`).play();
+         playSound("wrong")
+           $("#level-title").text("Game Over. Press any key to restart")
         setTimeout(() => {
             $("body").removeClass("game-over")
         }, 200);
+        startOver();
     }
 }
 
@@ -68,5 +76,4 @@ function startOver(){
     count = 0;
     gamePattern=[]
     toggle = true;   
-    userClickedPattern=[]
 }
